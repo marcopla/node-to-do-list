@@ -4,32 +4,40 @@ const router = express.Router();
 
 const Checklist = require('../models/checklist');
 
-router.get('/', (req, res) => {
-  console.log('Olá');
-  res.send();
+router.get('/', async (req, res) => {
+  try {
+    let checklist = await Checklist.find({});
+    res.status(200).json(checklist);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 router.post('/', async (req, res) => {
   let { name } = req.body;
-  try{
-    let checklist = await Checklist.create({name}) 
-    
-  }catch(error){
-
+  try {
+    let checklist = await Checklist.create({ name });
+    res.status(200).json(checklist);
+  } catch (error) {
+    res.status(422).json(error);
   }
-  console.log({ name });
-  res.status(200).json(req.body);
 });
 
-router.get('/:id', (req, res) => {
-  console.log(req.params);
-
-  res.send(`ID: ${req.params.id}`);
+router.get('/:id', async (req, res) => {
+  //let { id } = req.params.id;
+  try {
+    let checklist = await Checklist.findById(req.params.id);
+    res.status(200).json(checklist);
+  } catch (error) {
+    res.status(422).json(error);
+  }
 });
 
-router.put('/:id', (req, res) => {
-  console.log(req.params);
-  res.send(`PUT ID: ${req.params.id}`);
+router.put('/:id', async (req, res) => {
+  let { name } = req.body;
+  try {
+    let checklist = await Checklist.findByIdAndUpdate(req.params.id, { name });
+  } catch (error) {}
 });
 
 router.delete('/:id', (req, res) => {
